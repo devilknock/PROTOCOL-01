@@ -344,4 +344,159 @@ function saveData() {
 }
 
 function switchPage(pId, el) {
-    document.querySelector
+    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(pId).classList.remove('hidden');
+    el.classList.add('active');
+    const isQuest = pId === 'questPage';
+    document.getElementById("mainHeader").classList.toggle('hidden', !isQuest);
+    document.getElementById("daysStrip").classList.toggle('hidden', !isQuest);
+    document.getElementById("streakBadge").classList.toggle('hidden', !isQuest);
+}
+
+let tInt, tLeft, tActive = false, isPaused = false;
+function handleTimer() {
+    const btn = document.getElementById("tBtn");
+    const pBtn = document.getElementById("pauseBtn");
+    if(!tActive) {
+        playSFX('click'); 
+        tLeft = document.getElementById("userMins").value * 60;
+        tActive = true; isPaused = false;
+        btn.innerText = "ABORT"; btn.style.background = "#ff4444";
+        pBtn.classList.remove('hidden'); pBtn.innerText = "PAUSE";
+        tInt = setInterval(() => {
+            if(!isPaused) {
+                tLeft--;
+                let m = Math.floor(tLeft/60), s = tLeft%60;
+                document.getElementById("countdownDisplay").innerText = `${m}:${s<10?'0'+s:s}`;
+                if(tLeft <= 0) {
+                    clearInterval(tInt); tActive=false;
+                    intel+=15; xp+=20; saveData(); updateUI();
+                    showOverlay("PROTOCOL COMPLETE", "Focus session finished. +20 XP Gained.");
+                    btn.innerText = "ENGAGE"; btn.style.background = "var(--primary)";
+                    pBtn.classList.add('hidden');
+                }
+            }
+        }, 1000);
+    } else {
+        clearInterval(tInt); tActive = false;
+        btn.innerText = "ENGAGE"; btn.style.background = "var(--primary)";
+        pBtn.classList.add('hidden');
+        document.getElementById("countdownDisplay").innerText = document.getElementById("userMins").value + ":00";
+    }
+}
+
+function togglePause() {
+    isPaused = !isPaused;
+    const pBtn = document.getElementById("pauseBtn");
+    pBtn.innerText = isPaused ? "RESUME" : "PAUSE";
+    pBtn.style.background = isPaused ? "var(--primary)" : "#eee";
+}
+
+window.onload = () => { 
+    checkPenalty(); 
+    const dayIdx = new Date().getDay();
+    document.getElementById("motivationMsg").innerText = `[SYSTEM]: "${quotes[dayIdx]}"`;
+    updateUI(); 
+    renderTasks(); 
+    triggerWelcome(); 
+};
+
+// 1. Progress Tracking Logic
+let history = JSON.parse(localStorage.getItem("questHistory")) || {};
+
+// Function to mark today's progress
+function updateHistory() {
+    const today = new Date().toDateString();
+    const dayIdx = new Date().getDay();
+    const totalToday = baseTasks[dayIdx].length;
+    
+    if (completed.length === totalToday) {
+        history[today] = "complete";
+    } else {
+        history[today] = "incomplete";
+    }
+    localStorage.setItem("questHistory", JSON.stringify(history));
+}
+
+// 2. Rank Prediction Calculation
+function calculatePrediction() {
+    const currentXP = xp;
+    const currentRank = getCurrentRank();
+    const nextRank = ranks[ranks.indexOf(currentRank) + 1] || currentRank;
+    
+    if (nextRank === currentRank) {
+        document.getElementById("predictionBox").innerHTML = "MAX RANK ACHIEVED";
+        return;
+    }
+
+    const xpNeeded = (nextRank.minLvl - 1) * 250 - currentXP;
+    const xpPerDay = 100; // Average (4 tasks * 25xp)
+
+    const daysIfPerfect = Math.ceil(xpNeeded / xpPerDay);
+    const daysIfMissedOnce = Math.ceil(xpNeeded / (xpPerDay * 0.8)); // Estimate 20% slowdown
+
+    document.getElementById("predictionBox").innerHTML = `
+        Target: <b style="color:${nextRank.color}">${nextRank.name}</b><br>
+        • <b>${daysIfPerfect} days</b> (Agar roz tasks poore kiye)<br>
+        • <b>${daysIfMissedOnce} days</b> (Agar beech mein miss hua)
+    `;
+}
+
+// 3. Calendar Rendering
+function renderCalendar() {
+    const grid = document.getElementById("calendarGrid");
+    const monthDisp = document.getElementById("monthDisplay");
+    const now = new Date();
+    const month = now.toLocaleString('default', { month: 'long' });
+    monthDisp.innerText = `${month} ${now.getFullYear()}`;
+
+    grid.innerHTML = "";
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+
+    let completedCount = 0;
+
+    for (let i = 1; i <= daysInMonth; i++) {
+        const dateStr = new Date(now.getFullYear(), now.getMonth(), i).toDateString();
+        const dayDiv = document.createElement("div");
+        dayDiv.className = "calendar-day";
+        dayDiv.innerText = i;
+
+        if (dateStr === now.toDateString()) dayDiv.classList.add("today-marker");
+
+        if (history[dateStr] === "complete") {
+            dayDiv.classList.add("day-complete");
+            completedCount++;
+        } else if (history[dateStr] === "incomplete") {
+            dayDiv.classList.add("day-missed");
+        }
+        grid.appendChild(dayDiv);
+    }
+    
+    document.getElementById("completionRate").innerText = `${Math.round((completedCount/daysInMonth)*100)}% Done`;
+}
+
+// Update existing functions
+const originalSaveData = saveData;
+saveData = function() {
+    originalSaveData();
+    updateHistory();
+    calculatePrediction();
+    renderCalendar();
+};
+
+// Initialize on page switch
+const originalSwitchPage = switchPage;
+switchPage = function(pId, el) {
+    originalSwitchPage(pId, el);
+    if (pId === 'progressPage') {
+        calculatePrediction();
+        renderCalendar();
+    }
+};
+
+// Initial Call
+updateHistory();
+</script>
+</body>
+</html>
