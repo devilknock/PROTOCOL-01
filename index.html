@@ -242,13 +242,13 @@ let lastDate = localStorage.getItem("lastDate");
 let lastLevel = parseInt(localStorage.getItem("lastLevel")) || 1;
 
 const baseTasks = {
-    0: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Maths: 30m (2 Blocks)", t: "INT", v: 1}, {n: "GAT: 30m (2 Blocks)", t: "INT", v: 1}, {n: "English: 30m (2 Blocks)", t: "INT", v: 1},],
-    1: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Maths: 30m (2 Blocks)", t: "INT", v: 1}, {n: "GAT: 30m (1 Blocks)", t: "INT", v: 1}, {n: "English: 30m (1 Blocks)", t: "INT", v: 1},],
-    2: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Maths: 30m (1 Blocks)", t: "INT", v: 1}, {n: "GAT: 30m (2 Blocks)", t: "INT", v: 1}, {n: "English: 30m (1 Blocks)", t: "INT", v: 1},],
-    3: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Maths: 30m (1 Blocks)", t: "INT", v: 1}, {n: "GAT: 30m (1 Blocks)", t: "INT", v: 1}, {n: "English: 30m (2 Blocks)", t: "INT", v: 1},],
-    4: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Maths: 30m (2 Blocks)", t: "INT", v: 1}, {n: "GAT: 30m (1 Blocks)", t: "INT", v: 1}, {n: "English: 30m (1 Blocks)", t: "INT", v: 1},],
-    5: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Maths: 30m (1 Blocks)", t: "INT", v: 1}, {n: "GAT: 30m (2 Blocks)", t: "INT", v: 1}, {n: "English: 30m (1 Blocks)", t: "INT", v: 1},],
-    6: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Maths: 30m (1 Blocks)", t: "INT", v: 1}, {n: "GAT: 30m (1 Blocks)", t: "INT", v: 1}, {n: "English: 30m (2 Blocks)", t: "INT", v: 1},],
+    0: [{n: "Walking:30m", t: "STR", v: 1}, {n: "Hand Gripper: 30m", t: "STR", v: 1}, {n: "Maths: 30m (2 Blocks)", t: "INT", v: 1}, {n: "English: 30m (2 Blocks)", t: "INT", v: 1}, {n: "Eaditing: 1Hr", t: "INT", v: 1},],
+    1: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Hand Gripper: 30m", t: "STR", v: 1}, {n: "Maths: 30m (2 Blocks)", t: "INT", v: 1},  {n: "English: 30m (1 Blocks)", t: "INT", v: 1}, {n: "Eaditing: 1Hr", t: "INT", v: 1},],
+    2: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Hand Gripper: 30m", t: "STR", v: 1}, {n: "Maths: 30m (1 Blocks)", t: "INT", v: 1},  {n: "English: 30m (1 Blocks)", t: "INT", v: 1}, {n: "Eaditing: 1Hr", t: "INT", v: 1},],
+    3: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Hand Gripper: 30m", t: "STR", v: 1}, {n: "Maths: 30m (1 Blocks)", t: "INT", v: 1},  {n: "English: 30m (2 Blocks)", t: "INT", v: 1}, {n: "Eaditing: 1Hr", t: "INT", v: 1},],
+    4: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Hand Gripper: 30m", t: "STR", v: 1}, {n: "Maths: 30m (2 Blocks)", t: "INT", v: 1},  {n: "English: 30m (1 Blocks)", t: "INT", v: 1}, {n: "Eaditing: 1Hr", t: "INT", v: 1},],
+    5: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Hand Gripper: 30m", t: "STR", v: 1}, {n: "Maths: 30m (1 Blocks)", t: "INT", v: 1},  {n: "English: 30m (1 Blocks)", t: "INT", v: 1}, {n: "Eaditing: 1Hr", t: "INT", v: 1},],
+    6: [{n: "Exercise:30m", t: "STR", v: 1}, {n: "Hand Gripper: 30m", t: "STR", v: 1}, {n: "Maths: 30m (1 Blocks)", t: "INT", v: 1},  {n: "English: 30m (2 Blocks)", t: "INT", v: 1}, {n: "Eaditing: 1Hr", t: "INT", v: 1},],
 };
 
 const quotes = ["A weak mind leads to a weak body.", "The system has chosen you.", "Every rep is a step closer.", "Limits are for those without Protocol.", "Pain is temporary. Leveling is forever.", "The only way to survive is to get stronger.", "Your future self is watching."];
